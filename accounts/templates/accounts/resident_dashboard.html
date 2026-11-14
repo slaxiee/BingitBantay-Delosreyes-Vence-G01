@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card p-4 p-md-5">
+            <span class="badge bg-secondary text-white w-auto align-self-start mb-2 px-3 py-2 rounded-pill font-monospace small">Resident Portal</span>
+            <h2 class="fw-bold text-dark mb-2">Welcome, {{ user.get_full_name|default:user.username }}</h2>
+            <p class="text-muted">You are logged in as a community resident. Use this space to monitor reports and local updates.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

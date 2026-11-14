@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card p-4 p-md-5">
+            <span class="badge bg-primary text-white w-auto align-self-start mb-2 px-3 py-2 rounded-pill font-monospace small">Official Control Panel</span>
+            <h2 class="fw-bold text-dark mb-4">Barangay Official Dashboard</h2>
+            <h5 class="fw-semibold fs-5 mb-3">Pending Staff Approvals</h5>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="py-3">Name</th>
+                            <th class="py-3">Username</th>
+                            <th class="py-3">Role</th>
+                            <th class="py-3 text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for staff in pending_staff %}
+                        <tr>
+                            <td class="fw-medium">{{ staff.get_full_name|default:"N/A" }}</td>
+                            <td class="text-muted">{{ staff.username }}</td>
+                            <td><span class="badge bg-secondary text-white">{{ staff.get_role_display }}</span></td>
+                            <td class="text-end">
+                                <a href="{% url 'approve_staff' staff.id %}" class="btn btn-sm btn-dark px-3">Approve</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No pending accounts waiting for approval.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
