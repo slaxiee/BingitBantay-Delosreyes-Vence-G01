@@ -25,6 +25,19 @@ class ComplaintForm(forms.ModelForm):
             }),
         }
 
+        class ComplaintReviewForm(forms.ModelForm):
+    class Meta:
+        model = Complaint
+        fields = ['status', 'staff_remarks']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'staff_remarks': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Enter patrol response, warning issued, or resolution notes...'
+            }),
+        }
+
     def clean_incident_time(self):
         incident_time = self.cleaned_data.get('incident_time')
         if incident_time and incident_time > timezone.now():
