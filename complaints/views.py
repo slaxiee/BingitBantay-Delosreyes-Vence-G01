@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-from .forms import ComplaintForm
+from .forms import ComplaintForm, ComplaintReviewForm
 from .models import Complaint
 
 
@@ -82,3 +82,45 @@ def delete_complaint(request, pk):
         return redirect('my_complaints')
 
     return render(request, 'complaints/complaint_confirm_delete.html', {'complaint': complaint})
+
+
+@login_required
+def manage_complaints(request):
+    if getattr(request.user, 'role', '') not in ['tanod', 'official']:
+        messages.error(request, "Access denied. Only Barangay Tanods and Officials can review complaints.")
+        return redirect('dashboard_redirect')
+
+    status_filter = request.GET.get('status', '')
+    complaints = Complaint.objects.select_related('resident').all()
+    if status_filter in ['filed', 'under_review', 'resolved']:
+        complaints = complaints.filter(status=status_filter)
+
+    return render(request, 'complaints/manage_complaints.html', {
+        'complaints': complaints,
+        'status_filter': status_filter,
+    })
+
+
+@login_required
+def review_complaint(request, pk):
+    if getattr(request.user, 'role', '') not in ['tanod', 'official']:
+        messages.error(request, "Access denied.")
+        return redirect('dashboard_redirect')
+
+    complaint = get_object_or_404(Complaint, pk=pk)
+
+    if request.method == 'POST':
+        form = ComplaintReviewForm(request.POST, instance=complaint)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Complaint #{complaint.id} updated to '{complaint.get_status_display()}'.")
+            return redirect('manage_complaints')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = ComplaintReviewForm(instance=complaint)
+
+    return render(request, 'complaints/review_complaint.html', {
+        'complaint': complaint,
+        'form': form,
+    })
