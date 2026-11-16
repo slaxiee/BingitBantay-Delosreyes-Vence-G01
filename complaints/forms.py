@@ -10,7 +10,7 @@ class ComplaintForm(forms.ModelForm):
         widgets = {
             'location': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'e.g., Sitio Sambag, Purok 3, near Barangay Chapel'
+                'placeholder': 'e.g., Purok 3, Sitio Sambag, near Barangay Chapel'
             }),
             'incident_time': forms.DateTimeInput(attrs={
                 'class': 'form-control',
@@ -21,20 +21,7 @@ class ComplaintForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 4,
-                'placeholder': 'Describe the noise disturbance (duration, source, nearby landmarks)...'
-            }),
-        }
-
-        class ComplaintReviewForm(forms.ModelForm):
-    class Meta:
-        model = Complaint
-        fields = ['status', 'staff_remarks']
-        widgets = {
-            'status': forms.Select(attrs={'class': 'form-select'}),
-            'staff_remarks': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 3,
-                'placeholder': 'Enter patrol response, warning issued, or resolution notes...'
+                'placeholder': 'Describe the noise disturbance, estimated duration, and any landmarks...'
             }),
         }
 
@@ -47,5 +34,19 @@ class ComplaintForm(forms.ModelForm):
     def clean_description(self):
         description = self.cleaned_data.get('description', '').strip()
         if len(description) < 10:
-            raise forms.ValidationError("Please provide at least 10 characters describing the incident.")
+            raise forms.ValidationError("Please provide at least 10 characters describing the disturbance.")
         return description
+
+
+class ComplaintReviewForm(forms.ModelForm):
+    class Meta:
+        model = Complaint
+        fields = ['status', 'staff_remarks']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'staff_remarks': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Enter patrol response, warning issued, or resolution notes...'
+            }),
+        }
