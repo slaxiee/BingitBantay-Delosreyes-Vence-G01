@@ -5,7 +5,12 @@
         <div class="card p-4 p-md-5">
             <span class="badge bg-secondary text-white w-auto align-self-start mb-2 px-3 py-2 rounded-pill font-monospace small">Resident Portal</span>
             <h2 class="fw-bold text-dark mb-2">Welcome, {{ user.get_full_name|default:user.username }}</h2>
-            <p class="text-muted">You are logged in as a community resident. Use this space to monitor reports and local updates.</p>
+            <p class="text-muted mb-4">You are logged in as a community resident. Use this space to monitor reports and local updates.</p>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'file_complaint' %}" class="btn btn-dark">File a Noise Complaint</a>
+                <a href="{% url 'my_complaints' %}" class="btn btn-outline-dark">View My Complaints</a>
+            </div>
         </div>
     </div>
 </div>
